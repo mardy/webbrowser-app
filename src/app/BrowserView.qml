@@ -20,7 +20,6 @@ import QtQuick 2.4
 import QtQuick.Window 2.2
 import Ubuntu.Components 1.3
 import Ubuntu.Unity.Action 1.1 as UnityActions
-import com.canonical.Oxide 1.15 as Oxide
 
 FocusScope {
     property bool developerExtrasEnabled: false
@@ -137,8 +136,10 @@ FocusScope {
         }
     }
 
+    /* https://bugreports.qt.io/browse/QTBUG-70077
     Connections {
         target: Oxide.Oxide
         onAvailableVideoCaptureDevicesChanged: internal.setupDefaultVideoCaptureDevice()
     }
+    */
 }
