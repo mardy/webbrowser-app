@@ -17,7 +17,6 @@
  */
 
 import QtQuick 2.4
-import com.canonical.Oxide 1.7 as Oxide
 
 Item {
     visible: false
@@ -34,9 +33,9 @@ Item {
     QtObject {
         id: internal
 
-        readonly property int modeAuto: Oxide.LocationBarController.ModeAuto
-        readonly property int modeShown: Oxide.LocationBarController.ModeShown
-        readonly property int modeHidden: Oxide.LocationBarController.ModeHidden
+        readonly property int modeAuto: 0
+        readonly property int modeShown: 1
+        readonly property int modeHidden: 2
 
         function updateVisibility() {
             if (!webview) {
@@ -79,18 +78,6 @@ Item {
             if (webview.loading && !webview.fullscreen && !forceHide && !forceShow &&
                 (webview.locationBarController.mode == internal.modeAuto)) {
                 webview.locationBarController.show(true)
-            }
-        }
-
-        onLoadEvent: {
-            // When loading, force ModeShown until the load is committed or stopped,
-            // to work around https://launchpad.net/bugs/1453908.
-            if (forceHide || forceShow) return
-            if (event.type == Oxide.LoadEvent.TypeStarted) {
-                webview.locationBarController.mode = internal.modeShown
-            } else if ((event.type == Oxide.LoadEvent.TypeCommitted) ||
-                       (event.type == Oxide.LoadEvent.TypeStopped)) {
-                webview.locationBarController.mode = defaultMode
             }
         }
     }

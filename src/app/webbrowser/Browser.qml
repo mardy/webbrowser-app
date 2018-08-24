@@ -20,7 +20,6 @@ import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtSystemInfo 5.5
 import Qt.labs.settings 1.0
-import com.canonical.Oxide 1.19 as Oxide
 import Ubuntu.Components 1.3
 import Ubuntu.Components.Popups 1.3
 import Ubuntu.Web 0.2
@@ -95,8 +94,8 @@ BrowserView {
     function restoreTabState(state) {
         var properties = {'initialUrl': state.url, 'initialTitle': state.title,
                           'uniqueId': state.uniqueId, 'initialIcon': state.icon,
-                          'preview': state.preview, 'restoreState': state.savedState,
-                          'restoreType': Oxide.WebView.RestoreLastSessionExitedCleanly}
+                          'preview': state.preview, 'restoreState': state.savedState /* TODO no restore support in QtWebEngine,
+                          'restoreType': Oxide.WebView.RestoreLastSessionExitedCleanly */}
         return createTab(properties)
     }
 
@@ -512,9 +511,11 @@ BrowserView {
         webview: browser.currentWebview
         forceHide: browser.currentWebview ? browser.currentWebview.fullscreen : false
         forceShow: recentView.visible
+        /* TODO QtWebEngine?
         defaultMode: (internal.hasMouse && !internal.hasTouchScreen)
                          ? Oxide.LocationBarController.ModeShown
                          : Oxide.LocationBarController.ModeAuto
+                         */
     }
 
     Chrome {
@@ -1199,15 +1200,19 @@ BrowserView {
 
         function allowCertificateError(error) {
             var host = UrlUtils.extractHost(error.url)
-            var code = error.certError
-            var fingerprint = error.certificate.fingerprintSHA1
+            var code = error.error
+            /*
+             TODO: https://bugreports.qt.io/browse/QTBUG-70168
+             var fingerprint = error.certificate.fingerprintSHA1
+            */
+            var fingerprint = ""
             allowedCertificateErrors.push([host, code, fingerprint])
         }
 
         function isCertificateErrorAllowed(error) {
             var host = UrlUtils.extractHost(error.url)
-            var code = error.certError
-            var fingerprint = error.certificate.fingerprintSHA1
+            var code = error.error
+            var fingerprint = "" // FIXME see above, https://bugreports.qt.io/browse/QTBUG-70168
             for (var i in allowedCertificateErrors) {
                 var allowed = allowedCertificateErrors[i]
                 if ((host == allowed[0]) &&

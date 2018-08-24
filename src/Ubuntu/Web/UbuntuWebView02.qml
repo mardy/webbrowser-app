@@ -28,6 +28,25 @@ WebEngineView {
 
     property alias context: profile
 
+    property var locationBarController: QtObject {
+        readonly property int modeAuto: 0
+        readonly property int modeShown: 1
+        readonly property int modeHidden: 2
+
+        property bool animated: false
+        property int mode: modeAuto
+        function show(animate) {
+            console.log('locationBarController.show() called')
+            // TODO
+        }
+    }
+
+    property var certificateError: null
+    onCertificateError: certificateError = error
+    function resetCertificateError() {
+        certificateError = null
+    }
+
     /**
      * Client overridable function called before the default treatment of a
      *  valid navigation request. This function can stop the navigation request

@@ -80,10 +80,12 @@ FocusScope {
     function load() {
         if (!webview && !internal.incubator) {
             var properties = {'tab': tab, 'incognito': incognito}
+            /* TODO: no restore support in QtWebEngine
             if (restoreState) {
                 properties['restoreState'] = restoreState
                 properties['restoreType'] = restoreType
-            } else {
+                
+            } else */ {
                 properties['url'] = initialUrl
             }
             var incubator = webviewComponent.incubateObject(webviewContainer, properties)
